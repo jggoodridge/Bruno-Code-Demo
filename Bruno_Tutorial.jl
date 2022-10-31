@@ -34,6 +34,12 @@ using ForecastEval
 # ╔═╡ 9b40e379-6f1c-406a-bc78-af9ef3985425
 md"## Tutorial on how to use Bruno package in Julia"
 
+# ╔═╡ 59e926f9-96b0-4fac-b012-b8fb39584bc0
+md" Note: If you ever have a question or need help with a function or command in this package, type ? to get the help prompt to come up. Then, 
+
+# ╔═╡ a60b092b-3ef5-4f83-9d8e-e52ebb9e4a0a
+md" ##### Importing needed packages."
+
 # ╔═╡ 94418871-2f19-4716-90fc-74d2560d5e42
 md" #### Loading in the data"
 
@@ -60,6 +66,26 @@ plot(spot_gas, label="Spot price of Gas, Oct 1991-Dec 2003")
 
 # ╔═╡ d2c75067-cfb5-4a6c-8238-b08b1285a76f
 plot(futures_gas, label="Futures price of gas, Oct 1991-Dec 2003")
+
+# ╔═╡ a1051cfe-cb54-4e5f-b9de-92ed05ba1982
+md" #### Using the bootstrap function to generate data." 
+
+# ╔═╡ 00c559f3-31ed-48e0-bb71-c6e131a4805f
+md" Here I'm using the stationary bootstrap, but you could use the moving block or circular bootstrap as well. Before applying the bootstrap, I subset the data to include spot gas price, futures gas price, and three month treasury bill rate only. Notice that the input data set should not be a data frame, but a matrix or an array. "
+
+# ╔═╡ 2241266b-7bcb-4986-8a4b-8683348b9c30
+boot_data=Matrix(data[:, 4:6])
+
+# ╔═╡ 04d82b45-7b92-449a-a01c-8a36db6284f1
+boot_setup=BootstrapInput(boot_data[:, 1], Stationary)
+
+# ╔═╡ 2ecdbccb-28e7-4a97-9fb5-b2da4b04f095
+# Generating bootstrapped data, 10,000 replications
+bootstrapped_data=makedata(boot_setup, 10000)
+
+# ╔═╡ 13a81ea7-a0ae-4250-ae5a-6ad24c18c4e8
+#plot simulated price paths
+plot(1:length(bootstrapped_data[:, 1]), bootstrapped_data[:, 1:100], title= "Price Path Simulation", legend=false)
 
 # ╔═╡ bbb99591-20d7-4c5c-ac7c-140eadcb8078
 md"#### Calculating volatility, given a set of prices"
@@ -191,8 +217,13 @@ SPA_test=spa(ld)
 # ╔═╡ d9c62edc-479a-4dc7-a9e4-8d6a79381c98
 md" As can be seen from SPA test results, all p-values are greater than 0.10, which means that I fail to reject the null hypothesis. The null hypothesis is that the benchmark model is at least as good as the the alternative models. Therefore, since the one-to-one hedge is the benchmark, I conclude that the one-to-one hedge is not inferior to the other hedging strategies."
 
+# ╔═╡ a0178e59-8c0a-47de-b279-8fcda4ea368f
+md" ###### One final note: If you ever have a question or need help with a function or command in this package, type ? to get the help prompt to come up. Then type the name of the command or function and the documentation will display."
+
 # ╔═╡ Cell order:
 # ╠═9b40e379-6f1c-406a-bc78-af9ef3985425
+# ╠═59e926f9-96b0-4fac-b012-b8fb39584bc0
+# ╠═a60b092b-3ef5-4f83-9d8e-e52ebb9e4a0a
 # ╠═32ac49cf-e34a-4b13-813d-c18434f74ca1
 # ╠═f4baacbb-a9d9-41b4-89e0-83c2ad56f3a9
 # ╠═12857ac1-e4f4-4a86-9f90-3a2c8df818bb
@@ -210,6 +241,12 @@ md" As can be seen from SPA test results, all p-values are greater than 0.10, wh
 # ╠═5e59a8ba-816d-4d14-864a-7f7086f4cd52
 # ╠═92e697ff-b966-4588-ad88-b0e2d4f4cd90
 # ╠═d2c75067-cfb5-4a6c-8238-b08b1285a76f
+# ╠═a1051cfe-cb54-4e5f-b9de-92ed05ba1982
+# ╠═00c559f3-31ed-48e0-bb71-c6e131a4805f
+# ╠═2241266b-7bcb-4986-8a4b-8683348b9c30
+# ╠═04d82b45-7b92-449a-a01c-8a36db6284f1
+# ╠═2ecdbccb-28e7-4a97-9fb5-b2da4b04f095
+# ╠═13a81ea7-a0ae-4250-ae5a-6ad24c18c4e8
 # ╠═bbb99591-20d7-4c5c-ac7c-140eadcb8078
 # ╠═d9554477-0cc8-4d2a-b710-d12629993c0f
 # ╠═1306d6cf-fbcb-454d-9905-1e949937344e
@@ -245,3 +282,4 @@ md" As can be seen from SPA test results, all p-values are greater than 0.10, wh
 # ╠═ec2f77e4-941f-4b56-9384-97ffa51781f5
 # ╠═d028f8df-e76a-4036-a1be-b5d9d11aa08f
 # ╠═d9c62edc-479a-4dc7-a9e4-8d6a79381c98
+# ╠═a0178e59-8c0a-47de-b279-8fcda4ea368f
